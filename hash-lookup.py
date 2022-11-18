@@ -1,20 +1,20 @@
-import zlib
+import zlib, os
 
 def make_hash40(source_str):
     return (len(source_str) << 32) + zlib.crc32(source_str.encode())
 
 def load_hashes():
-    with open("C:\\Modding\\Tools\\PATH\\Hashes\\Hashes_all.txt", "r") as f:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)),  "Hashes", "Hashes_all.txt"), "r") as f:
         for line in f.readlines():
             line = line.strip()
             arc_hashes[make_hash40(line)] = line
-    with open("C:\\Modding\\Tools\\PATH\\Hashes\\ParamLabels.csv", "r") as f:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)),  "Hashes", "ParamLabels.csv"), "r") as f:
         for line in f.readlines():
             line = line.strip()
             (hash40, value) = line.split(',')
             hash40 = int(hash40, base=16)
             param_hashes[hash40] = value
-    with open("C:\\Modding\\Tools\\PATH\\Hashes\\tone_names.txt", "r") as f:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)),  "Hashes", "tone_names.txt"), "r") as f:
         for line in f.readlines():
             line = line.strip()
             nus3audio_hashes[make_hash40(line)] = line
