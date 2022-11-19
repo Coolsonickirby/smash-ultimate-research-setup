@@ -19,6 +19,6 @@ Now you have access to the following functions
     7. `break_at <offset>`: Sets a breakpoint at an offset relative to the base of main
     8. `localize <register/address>`: Converts the value in the register (or the passed address) to an offset relative to the base of main
     9. `xxd <address> <size>`: Print a xxd dump of the address (will most likely work on Unix Systems only!)
-    10. `usual`: Runs `get_pc`, `localize $lr`, & `my_bt2` to get the current offset, the calling offset, and the backtrace in one command instead of three
+    10. `print_trace`: Runs `get_pc`, `localize $lr`, & `my_bt2` to get the current offset, the calling offset, and the backtrace in one command instead of three
 ```
 This is all blujay's stuff. Check him out at [Twitter](https://twitter.com/jayblu_/) and support him on [Ko-Fi](https://ko-fi.com/bludev)!

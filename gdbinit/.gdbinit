@@ -46,7 +46,7 @@ define setup
    source ~/attach.py
 end
 
-define usual
+define print_trace
    get_pc
    localize $lr
    my_bt2
