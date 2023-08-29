@@ -23,15 +23,17 @@ info = gdb.execute("mon get info", to_string=True)
 for line in info.split('\n'):
     for start in main_start:
         if start in line:
-            print("Found %s address start! Setting $main to it..." % start)
+            print("Found %s address start! Setting $main and $main_title" % start)
             res = line.strip()
             main = res.split(" ")[0]
             gdb.execute("set $main = %s" % main)
+            gdb.execute('set $main_title = "%s"' % start)
             print("Set $main to %s (%s address start)" % (main, start))
+            print("Set $main_title to %s" % start)
             found = True
             break
 if not found:
-    print("Could not find any of: %s!" % ' - '.join(main_start))
+    print("Could not find any of: %s! Manually set $main and $main_title" % ' - '.join(main_start))
 else:
     print()
     print("You can now do your stuff (make sure to `continue` so the game can start after setting up your break/watch points)")
