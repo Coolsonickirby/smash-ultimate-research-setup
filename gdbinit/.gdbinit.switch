@@ -1,0 +1,69 @@
+define my_bt
+  set $frame = $fp
+  set $prev_frame = 0
+  while $frame != 0 && $prev_frame != $frame
+      set $prev_frame = $frame
+      p/x ((unsigned long long *)$frame)[1]
+      set $frame = ((unsigned long long *)$frame)[0]
+  end
+end
+define my_bt2
+  set $frame = $fp
+  set $prev_frame = 0
+  while $frame != 0 && $prev_frame != $frame
+    set $prev_frame = $frame
+    set $curr_addr = ((unsigned long long *)$frame)[1]
+    set $offset_kind = "offset"
+    source ~/print_addr_setup.py
+    set $frame = ((unsigned long long *)$frame)[0]
+  end
+end
+define no_op
+  set {unsigned int}($main+$arg0) = 0xD503201F
+end
+define stub
+  set {unsigned int}($main+$arg0) = 0xD65F03C0
+end
+define replace
+  set {unsigned int}($main+$arg0) = $arg1
+end
+define get_pc
+  set $curr_addr = $pc
+  set $offset_kind = "    pc"
+  source ~/print_addr_setup.py
+end
+define break_at
+  b *$main+$arg0
+end
+define localize
+   set $curr_addr = $arg0
+   set $offset_kind = "offset"
+   source ~/print_addr_setup.py
+end
+define prepare_rehook
+  printf "replace %x %x\n", $arg0, ((unsigned int*)($main+$arg0))[0]
+  printf "replace %x %x\n", $arg0+4, ((unsigned int*)($main+$arg0))[1]
+  printf "replace %x %x\n", $arg0+8, ((unsigned int*)($main+$arg0))[2]
+  printf "replace %x %x\n", $arg0+0xC, ((unsigned int*)($main+$arg0))[3]
+end
+
+define setup
+   source ~/attach.py
+end
+
+define print_trace
+   get_pc
+   set $curr_addr = $lr
+   set $offset_kind = "    lr"
+   source ~/print_addr_setup.py
+   my_bt2
+end
+
+define xxd
+   dump binary memory dump.bin $arg0 $arg0+$arg1
+   shell xxd dump.bin
+end
+
+set pagination off
+target extended-remote 192.168.1.170:22225
+setup
